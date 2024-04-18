@@ -1,0 +1,81 @@
+name: AvaotaOS-build-mesa
+on:
+  workflow_dispatch:
+  
+permissions:
+  contents: write
+
+jobs:
+  prepare_release:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get time
+        id: time
+        uses: nanzm/get-time-action@v1.1
+        with:
+          format: 'YYYYMMDD-HHmm'
+      - name: Create empty release
+        id: release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.time.outputs.time }}
+          body_path: VERSION
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target_commitish: ubuntu
+          draft: false
+    outputs:
+      release_id: ${{ steps.release.outputs.id }}
+  build:
+    runs-on: ubuntu-22.04
+    needs: prepare_release
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Clean environment
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          set +e
+          docker rmi `docker images -q`
+          echo "Deleting files, please wait ..."
+          sudo rm -rf \
+            /usr/share/dotnet \
+            /etc/mysql \
+            /etc/php
+          sudo -E apt-get -y purge \
+            azure-cli \
+            ghc* \
+            zulu* \
+            hhvm \
+            llvm* \
+            firefox \
+            google* \
+            dotnet* \
+            powershell \
+            openjdk* \
+            mysql* \
+            php*
+          sudo -E apt-get -y autoremove --purge
+          sudo -E apt-get clean
+      - name: Build
+        shell: bash
+        run: |
+          sudo bash build.sh
+      - name: Upload
+        if: needs.prepare_release.outputs.release_id != ''
+        uses: xresloader/upload-to-github-release@v1
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          release_id: ${{ needs.prepare_release.outputs.release_id }}
+          file: "./*.deb"
+          draft: false
+      - name: Rollback release
+        if: failure() && needs.prepare_release.outputs.release_id != ''
+        uses: author/action-rollback@stable
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          release_id: ${{ needs.prepare_release.outputs.release_id }}
