@@ -23,7 +23,7 @@ jobs:
           tag_name: ${{ steps.time.outputs.time }}
           body_path: VERSION
           token: ${{ secrets.GITHUB_TOKEN }}
-          target_commitish: ubuntu
+          target_commitish: main
           draft: false
     outputs:
       release_id: ${{ steps.release.outputs.id }}
