@@ -15,4 +15,5 @@ RUN apt install -y debhelper-compat directx-headers-dev glslang-tools meson quil
                    pkg-config libexpat1-dev python3-ply python3-setuptools flex bison \
                    libelf-dev zlib1g-dev git make gcc cmake dpkg-dev
 RUN git clone --depth=1 https://git.launchpad.net/ubuntu/+source/mesa -b applied/ubuntu/jammy-devel
-RUN cd mesa && dpkg-buildpackage
+COPY add-sunxi-drm.patch /workspace/mesa/add-sunxi-drm.patch
+RUN cd mesa && patch -p1 < add-sunxi-drm.patch && dpkg-buildpackage

@@ -1,0 +1,22 @@
+diff -Nuar a/src/gallium/targets/dri/meson.build b/src/gallium/targets/dri/meson.build
+--- a/src/gallium/targets/dri/meson.build	2024-04-18 11:57:44.775931280 +0800
++++ b/src/gallium/targets/dri/meson.build	2024-04-18 11:59:19.430209076 +0800
+@@ -92,6 +92,7 @@
+                'st7735r_dri.so',
+                'stm_dri.so',
+ 	       'sun4i-drm_dri.so',
++	       'sunxi-drm_dri.so',
+              ]],
+              [with_gallium_radeonsi, 'radeonsi_dri.so'],
+              [with_gallium_nouveau, 'nouveau_dri.so'],
+diff -Nuar a/src/gallium/targets/dri/target.c b/src/gallium/targets/dri/target.c
+--- a/src/gallium/targets/dri/target.c	2024-04-18 11:57:44.775931280 +0800
++++ b/src/gallium/targets/dri/target.c	2024-04-18 11:59:20.910241079 +0800
+@@ -122,6 +122,7 @@
+ DEFINE_LOADER_DRM_ENTRYPOINT(st7735r)
+ DEFINE_LOADER_DRM_ENTRYPOINT(stm)
+ DEFINE_LOADER_DRM_ENTRYPOINT(sun4i_drm)
++DEFINE_LOADER_DRM_ENTRYPOINT(sunxi_drm)
+ #endif
+ 
+ #if defined(GALLIUM_LIMA)
