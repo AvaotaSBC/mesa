@@ -8,9 +8,9 @@ docker cp mesa-jammy:/workspace .
 mkdir mesa-repo
 cp workspace/*.deb mesa-repo
 
-git clone https://github.com/AvaotaSBC/mesa.git -b jammy-devel mesa-repo-tmp
-cp mesa-repo-tmp/.git mesa-repo
+DATE=$(date)
 cd mesa-repo
+git init
 git add .
 git add -f .github
 git commit -m "${DATE} mesa-pkg update"
