@@ -59,23 +59,18 @@ jobs:
             php*
           sudo -E apt-get -y autoremove --purge
           sudo -E apt-get clean
+      - name: Set id
+          run: |
+            git config --global user.name "GitHub Actions"
+            git config --global user.email "actions@github.com"
       - name: Build
         shell: bash
         run: |
           sudo bash build.sh
-      - name: Upload
-        if: needs.prepare_release.outputs.release_id != ''
-        uses: xresloader/upload-to-github-release@v1
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          release_id: ${{ needs.prepare_release.outputs.release_id }}
-          file: "./*.deb"
-          draft: false
-      - name: Rollback release
-        if: failure() && needs.prepare_release.outputs.release_id != ''
-        uses: author/action-rollback@stable
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          release_id: ${{ needs.prepare_release.outputs.release_id }}
+      - name: Push changes ${{env.KERNEL_BRANCH}}
+          uses: ad-m/github-push-action@master
+          with:
+            github_token: ${{ secrets.SY_PAT }}
+            branch: ${{env.KERNEL_BRANCH}}
+            directory: mesa-repo
+            force: true
