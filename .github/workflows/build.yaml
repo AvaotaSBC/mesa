@@ -6,30 +6,8 @@ permissions:
   contents: write
 
 jobs:
-  prepare_release:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Get time
-        id: time
-        uses: nanzm/get-time-action@v1.1
-        with:
-          format: 'YYYYMMDD-HHmm'
-      - name: Create empty release
-        id: release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.time.outputs.time }}
-          body_path: VERSION
-          token: ${{ secrets.GITHUB_TOKEN }}
-          target_commitish: main
-          draft: false
-    outputs:
-      release_id: ${{ steps.release.outputs.id }}
   build:
     runs-on: ubuntu-22.04
-    needs: prepare_release
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -67,10 +45,10 @@ jobs:
         shell: bash
         run: |
           sudo bash build.sh
-      - name: Push changes ${{env.KERNEL_BRANCH}}
+      - name: Push changes
           uses: ad-m/github-push-action@master
           with:
             github_token: ${{ secrets.SY_PAT }}
-            branch: ${{env.KERNEL_BRANCH}}
+            branch: jammy-devel
             directory: mesa-repo
             force: true
