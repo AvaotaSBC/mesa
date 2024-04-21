@@ -13,4 +13,6 @@ cd mesa-repo
 git init
 git add .
 git add -f .github
+git remote add origin https://github.com/AvaotaSBC/mesa.git
+git branch -M jammy-devel
 git commit -m "${DATE} mesa-pkg update"
