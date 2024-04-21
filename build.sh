@@ -10,6 +10,8 @@ cp workspace/*.deb mesa-repo
 
 DATE=$(date)
 cd mesa-repo
+git config --global user.name "GitHub Actions"
+git config --global user.email "actions@github.com"
 git init
 git add .
 git add -f .github
