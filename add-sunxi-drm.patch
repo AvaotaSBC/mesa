@@ -1,6 +1,5 @@
-diff -Nuar a/src/gallium/targets/dri/meson.build b/src/gallium/targets/dri/meson.build
---- a/src/gallium/targets/dri/meson.build	2024-04-18 11:57:44.775931280 +0800
-+++ b/src/gallium/targets/dri/meson.build	2024-04-18 11:59:19.430209076 +0800
+--- a/src/gallium/targets/dri/meson.build
++++ b/src/gallium/targets/dri/meson.build
 @@ -92,6 +92,7 @@
                 'st7735r_dri.so',
                 'stm_dri.so',
@@ -9,9 +8,8 @@ diff -Nuar a/src/gallium/targets/dri/meson.build b/src/gallium/targets/dri/meson
               ]],
               [with_gallium_radeonsi, 'radeonsi_dri.so'],
               [with_gallium_nouveau, 'nouveau_dri.so'],
-diff -Nuar a/src/gallium/targets/dri/target.c b/src/gallium/targets/dri/target.c
---- a/src/gallium/targets/dri/target.c	2024-04-18 11:57:44.775931280 +0800
-+++ b/src/gallium/targets/dri/target.c	2024-04-18 11:59:20.910241079 +0800
+--- a/src/gallium/targets/dri/target.c
++++ b/src/gallium/targets/dri/target.c
 @@ -122,6 +122,7 @@
  DEFINE_LOADER_DRM_ENTRYPOINT(st7735r)
  DEFINE_LOADER_DRM_ENTRYPOINT(stm)
@@ -20,3 +18,14 @@ diff -Nuar a/src/gallium/targets/dri/target.c b/src/gallium/targets/dri/target.c
  #endif
  
  #if defined(GALLIUM_LIMA)
+--- a/debian/rules
++++ b/debian/rules
+@@ -90,7 +90,7 @@
+ 	# etnaviv, tegra, vc4 and v3d kernel support are only available on armhf and arm64
+ 	ifneq (,$(filter $(DEB_HOST_ARCH), armhf arm64))
+ 		GALLIUM_DRIVERS += etnaviv panfrost svga tegra vc4 v3d
+-		VULKAN_DRIVERS += broadcom freedreno
++		VULKAN_DRIVERS += broadcom freedreno panfrost
+ 	endif
+ 
+ 	ifneq (,$(filter $(DEB_HOST_ARCH), armhf arm64 riscv64))
